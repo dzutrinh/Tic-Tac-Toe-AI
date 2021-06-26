@@ -1,9 +1,9 @@
 prg=c3
 source=$(prg).c
 target=$(prg)
-cc=gcc
-cflags=--std=c99
-lflags=-o $(target)
+cc=wcl
+cflags=
+lflags=
 
 all: $(target)
 

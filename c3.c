@@ -45,8 +45,9 @@ bool playable(char board[3][3], int c, int r)
 /* check if the board still playable */
 bool has_move(char board[3][3])
 {
-    for (int r = 0; r < N; r++)
-    for (int c = 0; c < N; c++)
+    int r, c;
+    for (r = 0; r < N; r++)
+    for (c = 0; c < N; c++)
         if (board[r][c] == E)
             return true;
     return false;
@@ -55,14 +56,14 @@ bool has_move(char board[3][3])
 /* display game board */
 void show_board(char board[3][3])
 {
-    int v = 0;
-    for (int r = 0; r < N; r++)
+    int v = 0, r, c;
+    for (r = 0; r < N; r++)
     {
-        for (int c = 0; c < N; c++)
+	for (c = 0; c < N; c++)
         {
             if (!playable(board, c, r))
                 printf("[ %c ]", board[r][c]);
-            else
+	    else
                 printf("[ %d ]", v);
             v++;
         }
@@ -74,24 +75,24 @@ void show_board(char board[3][3])
 /* board evaluate function */
 int evaluate(char board[3][3])
 {
+    int r, c;
+
     /* row checks */
-    for (int r = 0; r < N; r++)
+	for (r = 0; r < N; r++)
     {
         if (board[r][0] == board[r][1] && board[r][1] == board[r][2])
         {
-            if (board[r][0] == X) return XSCORE;
-            else
+            if (board[r][0] == X) return XSCORE; else
             if (board[r][0] == O) return OSCORE;
         }
     }
 
     /* column check */
-    for (int c = 0; c < N; c++)
+	for (c = 0; c < N; c++)
     {
         if (board[0][c] == board[1][c] && board[1][c] == board[2][c])
         {
-            if (board[0][c] == X) return XSCORE;
-            else
+            if (board[0][c] == X) return XSCORE; else
             if (board[0][c] == O) return OSCORE;
         }
     }
@@ -99,15 +100,13 @@ int evaluate(char board[3][3])
     /* diagonal checks */
     if (board[0][0] == board[1][1] && board[1][1] == board[2][2])
     {
-        if (board[0][0] == X) return XSCORE;
-        else
+        if (board[0][0] == X) return XSCORE; else
         if (board[0][0] == O) return OSCORE;
     }
 
     if (board[2][0] == board[1][1] && board[1][1] == board[0][2])
     {
-        if (board[2][0] == X) return XSCORE;
-        else
+        if (board[2][0] == X) return XSCORE; else
         if (board[2][0] == O) return OSCORE;
     }
     return TIE;
@@ -116,6 +115,7 @@ int evaluate(char board[3][3])
 /* the minimax algorithm: assuming player is on the maximizer side */
 int minimax(char board[3][3], int depth, bool ismax)
 {
+    int r, c, best;
     int score = evaluate(board);        /* evaluating the board */
     if (score != TIE) return score;     /* return score if a player won */
     if (!has_move(board)) return TIE;   /* no more move? it is a tie */
@@ -124,13 +124,13 @@ int minimax(char board[3][3], int depth, bool ismax)
     if (ismax)                          /* evaluating the maximizer player */
     {
         int best = -1000;               /* for finding max */
-        for (int r = 0; r < N; r++)     /* scan the game board */
-        for (int c = 0; c < N; c++)
+		for (r = 0; r < N; r++) /* scan the game board */
+		for (c = 0; c < N; c++)
             if (board[r][c] == E)       /* found an empty cell */
             {
                 board[r][c] = computer; /* assuming computer move on that cell */
                 /* recursively explore down the state space */
-                int score = minimax(board, depth+1, false);
+                score = minimax(board, depth+1, false);
                 board[r][c] = E;        /* undo that move */
                 best = max(score, best);/* obtain the maximum score */
             }
@@ -139,13 +139,13 @@ int minimax(char board[3][3], int depth, bool ismax)
     else                                /* the minimizer's turn */
     {
         int best = 1000;                /* for finding min */
-        for (int r = 0; r < N; r++)     /* scan the game board */
-        for (int c = 0; c < N; c++)
+	for (r = 0; r < N; r++)         /* scan the game board */
+	for (c = 0; c < N; c++)
             if (board[r][c] == E)       /* found an empty cell */
             {
                 board[r][c] = human;    /* assuming human move on that cell */
                 /* recursively explore down the state space */
-                int score = minimax(board, depth+1, true);
+		score = minimax(board, depth+1, true);
                 board[r][c] = E;        /* undo that move */
                 best = min(score, best);/* obtain the minimum score */
             }
@@ -168,17 +168,18 @@ bool human_move(char board[3][3], int c, int r)
 /* AI select its best move */
 void computer_move(char board[3][3])
 {
-    int best = -1000;                   /* for finding the best move */
+    int best = -1000;			/* for finding the best move */
+    int score, r, c;
     struct move mv = {-1, -1};
 
     states = 0;                         /* reset state counter */
-    for (int r = 0; r < N; r++)         /* board scan */
-    for (int c = 0; c < N; c++)
-        if (board[r][c] == E)           /* found an empty cell */          
+    for (r = 0; r < N; r++)             /* board scan */
+    for (c = 0; c < N; c++)
+        if (board[r][c] == E)           /* found an empty cell */
         {
             board[r][c] = computer;     /* assuming the move */
             /* search the search space */
-            int score = minimax(board, 0, 0);
+	    score = minimax(board, 0, 0);
             board[r][c] = E;            /* and undo it */
             if (score > best)           /* find the minimum score */             
             {
@@ -237,4 +238,4 @@ int main()
     if (!has_move(board) && eval == TIE) printf("ties!\n"); 
 
     return 0;
-}
+}
