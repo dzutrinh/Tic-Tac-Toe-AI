@@ -48,8 +48,7 @@ bool has_move(char board[3][3])
     int r, c;
     for (r = 0; r < N; r++)
     for (c = 0; c < N; c++)
-        if (board[r][c] == E)
-            return true;
+        if (board[r][c] == E) return true;
     return false;
 }
 
@@ -63,7 +62,7 @@ void show_board(char board[3][3])
         {
             if (!playable(board, c, r))
                 printf("[ %c ]", board[r][c]);
-	    else
+	        else
                 printf("[ %d ]", v);
             v++;
         }
@@ -72,7 +71,7 @@ void show_board(char board[3][3])
     printf("\n");
 }
 
-/* board evaluate function */
+/* board evaluate function: X wins = +1, O wins = -1, tie = 0 */
 int evaluate(char board[3][3])
 {
     int r, c;
@@ -112,7 +111,7 @@ int evaluate(char board[3][3])
     return TIE;
 }
 
-/* the minimax algorithm: assuming player is on the maximizer side */
+/* the minimax algorithm: assuming player is on the minimizer side */
 int minimax(char board[3][3], int depth, bool ismax)
 {
     int r, c, best;
@@ -124,7 +123,7 @@ int minimax(char board[3][3], int depth, bool ismax)
     if (ismax)                          /* evaluating the maximizer player */
     {
         int best = -1000;               /* for finding max */
-		for (r = 0; r < N; r++) /* scan the game board */
+		for (r = 0; r < N; r++)         /* scan the game board */
 		for (c = 0; c < N; c++)
             if (board[r][c] == E)       /* found an empty cell */
             {
@@ -139,13 +138,13 @@ int minimax(char board[3][3], int depth, bool ismax)
     else                                /* the minimizer's turn */
     {
         int best = 1000;                /* for finding min */
-	for (r = 0; r < N; r++)         /* scan the game board */
-	for (c = 0; c < N; c++)
+	    for (r = 0; r < N; r++)         /* scan the game board */
+	    for (c = 0; c < N; c++)
             if (board[r][c] == E)       /* found an empty cell */
             {
                 board[r][c] = human;    /* assuming human move on that cell */
                 /* recursively explore down the state space */
-		score = minimax(board, depth+1, true);
+		        score = minimax(board, depth+1, true);
                 board[r][c] = E;        /* undo that move */
                 best = min(score, best);/* obtain the minimum score */
             }
@@ -179,7 +178,7 @@ void computer_move(char board[3][3])
         {
             board[r][c] = computer;     /* assuming the move */
             /* search the search space */
-	    score = minimax(board, 0, 0);
+	        score = minimax(board, 0, false);
             board[r][c] = E;            /* and undo it */
             if (score > best)           /* find the minimum score */             
             {
@@ -227,13 +226,13 @@ int main()
 
             eval = evaluate(board);     /* evaluate the board */
             switch (eval) {
-                case XSCORE: printf("computer wins!\n"); quit = true; break;
-                case OSCORE: printf("human wins!\n"); quit = true; break;
+            case XSCORE: printf("computer wins!\n"); quit = true; break;
+            case OSCORE: printf("human wins!\n"); quit = true; break;
             }
         }
     } while(!quit);
 
-    printf("Finalized:\n");
+    printf("finalized:\n");
     show_board(board);
     if (!has_move(board) && eval == TIE) printf("ties!\n"); 
 
