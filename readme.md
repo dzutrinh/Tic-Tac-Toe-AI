@@ -14,5 +14,5 @@ A simple Tic-Tac-Toe game between Human and Computer. Simply an illustration of 
 - Open Watcom 1.9 (MS-DOS)
 - GCC (macOS Big Sur)
 
-not sure if it work on the others :P
+So many DOS-based C compilers were tested, well I have a lot of spare time atm, not sure if it work on the others :P
 
