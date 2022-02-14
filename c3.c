@@ -237,4 +237,4 @@ int main()
     if (!has_move(board) && eval == TIE) printf("ties!\n"); 
 
     return 0;
-}
+}
