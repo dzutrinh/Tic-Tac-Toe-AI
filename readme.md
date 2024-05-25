@@ -12,3 +12,7 @@ A simple Tic-Tac-Toe game between Human and Computer. Simply an illustration of 
 ## Notes
 - DOS support is now temporarily removed.
 - Linux is not tested, I hope it would work :)
+
+## Screenshots
+![Screen 1](screens/screen02.png)
+![Screen 2](screens/screen01.png)
