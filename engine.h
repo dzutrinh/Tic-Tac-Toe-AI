@@ -3,6 +3,26 @@
 
 #include <stdio.h>
 
+/* =============== PROTOTYPES ==================== */
+bool is_playable(game_board g, int c, int r);
+
+bool is_occupied(game_board g, int c, int r);
+
+bool has_move(game_board g);
+
+void init_board(game_board g);
+
+void show_board(game_board g, bool final);
+
+int evaluate(game_board g);
+
+int minimax(game_board g, int depth, bool ismax);
+
+bool human_move(game_board g, int c, int r);
+
+void computer_move(game_board g);
+/* =============================================== */
+
 /* check if a cell is empty */
 bool is_playable(game_board g, int c, int r) {
     return g[r][c] == CELL_E;
@@ -56,6 +76,8 @@ void show_board(game_board g, bool final) {
     }
 }
 
+/* ---------------------- */
+/* for internal use only */
 bool match_row(game_board g, int r, char sym) {
     bool match = true;
     for (int c = 0; c < BOARD_SIZE && match; c++)
@@ -83,6 +105,7 @@ bool match_secondary_diagonal(game_board g, char sym) {
         match = match && (g[i][BOARD_SIZE-1-i] == sym); 
     return match;
 }
+/* ---------------------- */
 
 /* board evaluate function: X wins = +1, O wins = -1, tie = 0 */
 int evaluate(game_board g) {
@@ -107,6 +130,14 @@ int evaluate(game_board g) {
     if (match_secondary_diagonal(g, CELL_O)) return SCORE_O;
 
     return SCORE_TIE;
+}
+
+int mini(int a, int b) {
+    return a < b ? a : b;
+}
+
+int maxi(int a, int b) {
+    return a > b ? a : b;
 }
 
 /* the minimax algorithm: assuming player is on the minimizer side */

@@ -1,5 +1,5 @@
 /* -------------------------------------------------
- * Tic-Tac-Toe MiniMax
+ * C3.C: Tic-Tac-Toe MiniMax
  * -------------------------------------------------
  * V0.2
  * by Trinh D.D. Nguyen
@@ -11,14 +11,14 @@
  * - Windows + Dev-C++: Open C3.C and hit F11
  * -------------------------------------------------
  * Changes:
- * - Remove DOS support
+ * - Removed DOS support
+ * - Removed Windows 7 support
  * - Difficulty selection added
- * - Colorful display is now supported
+ * - Colorful interface is now supported
 */
 #include "game.h"
 
 int main() {  
-    if (game_init())
-        game_close(game_play());
+    if (game_init()) game_close(game_play());
     return 0;
 }

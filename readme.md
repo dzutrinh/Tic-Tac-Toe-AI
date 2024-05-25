@@ -6,7 +6,7 @@ A simple Tic-Tac-Toe game between Human and Computer. Simply an illustration of 
 * MinGW: type 'mingw32-make'
 
 ## Tested
-- Clang (macOS Big Sur)
+- Clang (macOS Monterey)
 - MinGW (Windows)
 
 ## Notes

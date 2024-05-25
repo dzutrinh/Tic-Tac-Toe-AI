@@ -10,6 +10,7 @@
     "files.associations": {
         "stdio.h": "c",
         "stdlib.h": "c",
-        "windows.h": "c"
+        "windows.h": "c",
+        "ctype.h": "c"
     }
 }

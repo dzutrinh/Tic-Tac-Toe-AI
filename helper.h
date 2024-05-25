@@ -5,19 +5,35 @@
 #include <stdlib.h>
 #include "defs.h"
 
-static void clear() {
+/* =============== PROTOTYPES ==================== */
+
+void clear();
+
+void show_progress();
+
+/* =============================================== */
+
+char progress[10][64] = {
+    C_MEDIUM"["C_THINKING"##         "C_MEDIUM"]\r",
+    C_MEDIUM"["C_THINKING" ##        "C_MEDIUM"]\r",
+    C_MEDIUM"["C_THINKING"  ##       "C_MEDIUM"]\r",
+    C_MEDIUM"["C_THINKING"   ##      "C_MEDIUM"]\r",
+    C_MEDIUM"["C_THINKING"    ##     "C_MEDIUM"]\r",
+    C_MEDIUM"["C_THINKING"     ##    "C_MEDIUM"]\r",
+    C_MEDIUM"["C_THINKING"      ##   "C_MEDIUM"]\r",
+    C_MEDIUM"["C_THINKING"       ##  "C_MEDIUM"]\r",
+    C_MEDIUM"["C_THINKING"        ## "C_MEDIUM"]\r",
+    C_MEDIUM"["C_THINKING"         ##"C_MEDIUM"]\r",
+};
+int progress_total = 10;
+int progress_current = 0;
+int progress_dir = +1;
+
+void clear() {
     puts("\x1b[2J\x1b[H");
 }
 
-static int mini(int a, int b) {
-    return a < b ? a : b;
-}
-
-static int maxi(int a, int b) {
-    return a > b ? a : b;
-}
-
-static void show_progress() {
+void show_progress() {
     fputs(C_BRIGHT"Computer"C_NORMAL" is "C_ERROR"thinking"C_NORMAL": ", stdout);
     fputs(progress[progress_current], stdout);
     fflush(stdout);

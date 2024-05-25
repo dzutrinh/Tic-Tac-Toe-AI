@@ -4,21 +4,51 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#ifdef _WIN32
+    #include <windows.h>
+#endif
 #include "defs.h"
 #include "helper.h"
 #include "engine.h"
 
-bool game_init() {
-    char choice;
+/* =============== PROTOTYPES ==================== */
+bool game_init();
+
+int game_play();
+
+void game_close(int result);
+/* =============================================== */
+
+#ifdef _WIN32
+	static 	DWORD mode = 0;						
+	static	HANDLE hConsole = NULL;
+#endif
+
+void  game_logo() {
     clear();
     puts(logo);
+    printf( C_RESET"%42s"C_WARNING"%d"C_RESET"."C_WARNING"%d"C_RESET"\n", 
+            "V", GAME_VERSION & 0x00FF, (GAME_VERSION >> 8));
+}
+
+bool game_init() {
+
+#ifdef _WIN32	
+    /* enable Virtual Terminal on Windows platforms to use ANSI sequences */
+	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	GetConsoleMode(hConsole, &mode);
+	SetConsoleMode(hConsole, mode | 0x0004);
+#endif
+
+    char choice;
+    game_logo();
     printf( "Select "C_BRIGHT"difficulty"C_RESET" level:\n"
-            "  ["C_EASY"E"C_RESET"]asy\n"
-            "  ["C_MEDIUM"M"C_RESET"]edium\n"
-            "  ["C_HARD"H"C_RESET"]ard\n"
-            "  ["C_IMPOSSIBLE"I"C_RESET"]mpossible\n"
+            "  "C_EASY"E"C_RESET"asy\n"
+            "  "C_MEDIUM"M"C_RESET"edium\n"
+            "  "C_HARD"H"C_RESET"ard\n"
+            "  "C_IMPOSSIBLE"I"C_RESET"mpossible\n"
             C_DARK"  -------------"C_RESET"\n"
-            "  Nah, I ["C_O"q"C_RESET"]uit\n"
+            "  Nah, I "C_O"q"C_RESET"uit\n"
             C_DARK"  -------------"C_RESET"\n"
             "Your choice: ");
     scanf("%c", &choice);
@@ -40,8 +70,7 @@ int game_play() {
 
     init_board(board);
     do {
-        clear();
-        puts(logo);
+        game_logo();
         show_board(board, false);       /* draw game board */
         if (has_move(board)) {          /* if the board is playable */
             do {                        /* get user input as index */
@@ -73,8 +102,7 @@ int game_play() {
 }
 
 void game_close(int result) {
-    clear();
-    puts(logo);
+    game_logo();
     show_board(board, true);
     switch (result) {
     case SCORE_X: printf(C_X"X"C_WARNING" WINS!"C_RESET"\n"); break;
@@ -82,6 +110,10 @@ void game_close(int result) {
     case SCORE_TIE: printf(C_WARNING"GAME TIES!"C_RESET"\n"); break;
     }
     puts(C_THINKING"Thanks for playing"C_RESET"!");
+
+#ifdef _WIN32
+	SetConsoleMode(hConsole, mode);	    /* restore previous CMD mode */
+#endif
 }
 
 #endif
