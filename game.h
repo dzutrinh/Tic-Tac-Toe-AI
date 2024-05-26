@@ -27,7 +27,7 @@ void game_close(int result);
 void  game_logo() {
     clear();
     puts(logo);
-    printf( C_RESET"%42s"C_WARNING"%d"C_RESET"."C_WARNING"%d"C_RESET"\n", 
+    printf( C_RESET"%42s"C_ERROR"%d"C_RESET"."C_ERROR"%d"C_RESET"\n", 
             "V", GAME_VERSION & 0x00FF, (GAME_VERSION >> 8));
 }
 

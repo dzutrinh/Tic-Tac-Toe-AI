@@ -52,7 +52,7 @@ void mssleep(long ms) {
 }
 
 void progress_interval(int interval) {
-    progress_update = interval;
+    progress_update = interval * BOARD_SIZE;
 }
 
 void progress_show() {
