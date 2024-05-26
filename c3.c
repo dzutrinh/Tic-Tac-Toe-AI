@@ -8,13 +8,14 @@
  * Building:
  * - Linux/macOS      : Type 'make'
  * - Windows + MinGW  : Type 'mingw32-make'
- * - Windows + Dev-C++: Open C3.C and hit F11
+ * - Windows + Dev-C++: Open 'c3.c' and hit F11
  * -------------------------------------------------
  * Changes:
  * - Removed DOS support
  * - Removed Windows 7 support
  * - Difficulty selection added
  * - Colorful interface is now supported
+ * - Pacifier bar added
 */
 #include "game.h"
 

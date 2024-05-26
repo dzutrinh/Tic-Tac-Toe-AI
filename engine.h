@@ -4,6 +4,7 @@
 #include <stdio.h>
 
 /* =============== PROTOTYPES ==================== */
+
 bool is_playable(game_board g, int c, int r);
 
 bool is_occupied(game_board g, int c, int r);
@@ -21,6 +22,7 @@ int minimax(game_board g, int depth, bool ismax);
 bool human_move(game_board g, int c, int r);
 
 void computer_move(game_board g);
+
 /* =============================================== */
 
 /* check if a cell is empty */
@@ -52,7 +54,7 @@ void init_board(game_board g) {
 void show_board(game_board g, bool final) {
 
 #define HBAR    for (int c = 0; c < BOARD_SIZE; c++) \
-                    printf(C_DARK"+----");           \
+                    printf(C_DARK"+-----");          \
                 printf("+\n");
 
     HBAR;
@@ -60,15 +62,15 @@ void show_board(game_board g, bool final) {
         for (int c = 0; c < BOARD_SIZE; c++) {
             if (is_occupied(g, c, r)) {
                 if (g[r][c] == CELL_X)
-                    printf(C_DARK"| "C_X"%2c ", g[r][c]);
+                    printf(C_DARK"| "C_X"%2c  ", g[r][c]);
                 else
-                    printf(C_DARK"| "C_O"%2c ", g[r][c]);
+                    printf(C_DARK"| "C_O"%2c  ", g[r][c]);
             }
             else {
                 if (!final)
-                    printf(C_DARK"| "C_EMPTY"%2d "C_DARK, r * BOARD_SIZE + c);
+                    printf(C_DARK"| "C_EMPTY"%2d  "C_DARK, r * BOARD_SIZE + c);
                 else
-                    printf(C_DARK"|    ");
+                    printf(C_DARK"|     ");
             }
         }
         printf(C_DARK"|\n");
@@ -143,39 +145,40 @@ int maxi(int a, int b) {
 /* the minimax algorithm: assuming player is on the minimizer side */
 int minimax(game_board g, int depth, bool ismax) {
     int r, c, best;
-    int score = evaluate(g);        /* evaluating the board */
-    if (score != SCORE_TIE) return score;     /* return score if a player won */
-    if (!has_move(g)) return SCORE_TIE;   /* no more move? it is a tie */
+    int score = evaluate(g);                /* evaluating the board */
+    if (score != SCORE_TIE) return score;   /* return score if a player won */
+    if (!has_move(g)) return SCORE_TIE;     /* no more move? it is a tie */
 
     if (depth >= game_depth) return score;
 
-    show_progress();
-    states++;                           /* explored a search state */
-    if (ismax) {                        /* evaluating the maximizer player */
-        int best = -1000;               /* for finding max */
-		for (r = 0; r < BOARD_SIZE; r++)         /* scan the game board */
+    progress_show();                        /* show progress bar */
+
+    states++;                               /* explored a search state */
+    if (ismax) {                            /* evaluating the maximizer player */
+        int best = -1000;                   /* for finding max */
+		for (r = 0; r < BOARD_SIZE; r++)    /* scan the game board */
 		for (c = 0; c < BOARD_SIZE; c++)
-            if (g[r][c] == CELL_E) {     /* found an empty cell */
-                g[r][c] = computer; /* assuming computer move on that cell */
+            if (g[r][c] == CELL_E) {        /* found an empty cell */
+                g[r][c] = computer;         /* assuming computer move on that cell */
                 /* recursively explore down the state space */
                 score = minimax(g, depth+1, false);
-                g[r][c] = CELL_E;        /* undo that move */
-                best = maxi(score, best);/* obtain the maximum score */
+                g[r][c] = CELL_E;           /* undo that move */
+                best = maxi(score, best);   /* obtain the maximum score */
             }
-        return best;                    /* and return it */
+        return best;                        /* and return it */
     }
-    else {                              /* the minimizer's turn */
-        int best = 1000;                /* for finding min */
-	    for (r = 0; r < BOARD_SIZE; r++)         /* scan the game board */
+    else {                                  /* the minimizer's turn */
+        int best = 1000;                    /* for finding min */
+	    for (r = 0; r < BOARD_SIZE; r++)    /* scan the game board */
 	    for (c = 0; c < BOARD_SIZE; c++)
-            if (g[r][c] == CELL_E) {     /* found an empty cell */
-                g[r][c] = human;    /* assuming human move on that cell */
+            if (g[r][c] == CELL_E) {        /* found an empty cell */
+                g[r][c] = human;            /* assuming human move on that cell */
                 /* recursively explore down the state space */
 		        score = minimax(g, depth+1, true);
-                g[r][c] = CELL_E;        /* undo that move */
-                best = mini(score, best);/* obtain the minimum score */
+                g[r][c] = CELL_E;           /* undo that move */
+                best = mini(score, best);   /* obtain the minimum score */
             }
-        return best;                    /* also return it */
+        return best;                        /* also return it */
     }
 }
 

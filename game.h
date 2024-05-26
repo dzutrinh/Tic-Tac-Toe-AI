@@ -54,10 +54,10 @@ bool game_init() {
     scanf("%c", &choice);
     choice = toupper(choice);
     switch (choice) {
-    case 'E': game_depth = GAME_EASY; break;
-    case 'M': game_depth = GAME_MEDIUM; break;
-    case 'H': game_depth = GAME_HARD; break;
-    case 'I': game_depth = GAME_IMPOSSIBLE; break;
+    case 'E': game_depth = GAME_EASY; progress_interval(2); break;
+    case 'M': game_depth = GAME_MEDIUM; progress_interval(5); break;
+    case 'H': game_depth = GAME_HARD; progress_interval(50); break;
+    case 'I': game_depth = GAME_IMPOSSIBLE; progress_interval(100); break;
     case 'Q': return false;
     }
     return true;
@@ -65,20 +65,25 @@ bool game_init() {
 
 int game_play() {
     bool quit = false;                  /* quit flag */
-    int input, c, r, eval;
+    bool valid;
+    int input, c, r, eval, range;
+    
     current = human;                    /* human moves first */
-
+    range = (BOARD_SIZE * BOARD_SIZE)-1;
     init_board(board);
     do {
         game_logo();
         show_board(board, false);       /* draw game board */
         if (has_move(board)) {          /* if the board is playable */
             do {                        /* get user input as index */
-                printf("Searched states: "C_THINKING"%-6d"C_RESET"\n", states);
-                printf(C_BRIGHT"Human "C_RESET"="C_O" %c"C_RESET" - "
-                    C_BRIGHT"Computer "C_RESET"="C_X" %c\n", human, computer);
-                printf(C_BRIGHT"Your move "C_DARK"("C_ERROR"-1"C_BRIGHT" = "C_WARNING"quit"C_DARK"): ");
-                scanf("%d", &input);
+                printf("Moves explored: ["C_THINKING"%-6d"C_RESET"]\n", states);
+                printf(C_BRIGHT"Human "C_RESET"["C_O"%c"C_RESET"] - "
+                       C_BRIGHT"Computer "C_RESET"["C_X"%c"C_RESET"]\n", human, computer);
+                do {
+                    printf(C_BRIGHT"Your move "C_DARK"["C_WARNING"%d"C_DARK"-"C_WARNING"%d"C_DARK"] ("C_ERROR"-1"C_BRIGHT" = "C_WARNING"quit"C_DARK"): ", 0, range);
+                    scanf("%d", &input);
+                    valid = (input >= -1 && input <= range);
+                } while (!valid);
                 if (input == -1) {
                     quit = true;
                     break;
