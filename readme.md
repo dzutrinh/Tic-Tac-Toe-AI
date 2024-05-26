@@ -14,4 +14,5 @@ A simple Tic-Tac-Toe game between Human and Computer. Simply an illustration of 
 - Linux is not tested, I hope it would work :)
 
 ## Screenshot
-![Screen 1](screens/screen_win.png)
+![Title screen](screens/screen01.png)
+![Gameplay screen](screens/screen02.png)
