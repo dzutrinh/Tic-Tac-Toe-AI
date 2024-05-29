@@ -8,8 +8,8 @@ Updates:
 - Alpha-Beta pruning strategy added. The strategy can be disabled by undefine the `_USE_ALPHA_BETA_PRUNE_` symbol also in the header file `defs.h`.
 
 ## Compiling
-* GCC: type 'make'
-* MinGW: type 'mingw32-make'
+* GCC: type `make`
+* MinGW: type `mingw32-make`
 
 ## Tested
 - Clang (macOS Monterey)
