@@ -1,3 +1,9 @@
+/* 
+ * GAME.H: Tic-Tac-Toe AI Game Engine
+ * -------
+ * Coded by Trinh D.D. Nguyen
+ * Last updates: May, 2024
+ */
 #ifndef _TICTACTOE_MINIMAX_GAME_H_
 #define _TICTACTOE_MINIMAX_GAME_H_
 

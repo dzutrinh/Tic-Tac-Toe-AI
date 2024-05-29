@@ -1,12 +1,23 @@
+/* 
+ * DEFS.H: Tic-Tac-Toe AI global definitions 
+ * -------
+ * Coded by Trinh D.D. Nguyen
+ * Last updates: May, 2024
+ */
 #ifndef _TICTACTOE_MINIMAX_DEFS_H_
 #define _TICTACTOE_MINIMAX_DEFS_H_
 
-#define BOARD_SIZE      3                  /* board size */
+/* Alpha-Beta pruning strategy:
+ * enable to compact the search space for faster runtime
+ */
+#define _USE_ALPHA_BETA_PRUNE_
+
+#define BOARD_SIZE      3                  /* board size, default at 3 */
 #define GAME_EASY       2
 #define GAME_MEDIUM     3
 #define GAME_HARD       5
 #define GAME_IMPOSSIBLE 6
-#define GAME_VERSION    0x0200             /* game version */
+#define GAME_VERSION    0x0300             /* game version */
 
 #define CELL_X          ('X')              /* cross piece */
 #define CELL_O          ('O')              /* nought piece */

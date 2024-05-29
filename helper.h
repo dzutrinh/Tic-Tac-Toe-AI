@@ -1,3 +1,9 @@
+/* 
+ * HELPERS.H: Tic-Tac-Toe AI helpers
+ * ----------
+ * Coded by Trinh D.D. Nguyen
+ * Last updates: May, 2024
+ */
 #ifndef _TICTACTOE_MINIMAX_HELPERS_H_
 #define _TICTACTOE_MINIMAX_HELPERS_H_
 
@@ -62,7 +68,11 @@ void progress_show() {
         fputs(C_X"Thinking"C_NORMAL": ", stdout);
         fputs(progress[progress_current], stdout);
         fflush(stdout);
+#ifdef _USE_ALPHA_BETA_PRUNE_
+        mssleep(5);
+#else
         mssleep(1);
+#endif
         progress_current+=progress_dir;
         if (progress_current <= 0 || progress_current >= PROGRESS_TOTAL-1)
             progress_dir *= -1;

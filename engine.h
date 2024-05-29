@@ -1,7 +1,17 @@
+/* 
+ * ENGINE.H: Tic-Tac-Toe AI MiniMax AI Core
+ * ---------
+ * Coded by Trinh D.D. Nguyen
+ * Last updates: May, 2024
+ */
 #ifndef _TICTACTOE_MINIMAX_ENGINE_H_
 #define _TICTACTOE_MINIMAX_ENGINE_H_
 
 #include <stdio.h>
+#include "defs.h"
+
+#define MIN_VAL -1000
+#define MAX_VAL +1000
 
 /* =============== PROTOTYPES ==================== */
 
@@ -17,7 +27,11 @@ void show_board(game_board g, bool final);
 
 int evaluate(game_board g);
 
-int minimax(game_board g, int depth, bool ismax);
+#ifdef _USE_ALPHA_BETA_PRUNE_
+    int minimax(game_board g, int depth, bool ismax, int alpha, int beta);
+#else
+    int minimax(game_board g, int depth, bool ismax);
+#endif
 
 bool human_move(game_board g, int c, int r);
 
@@ -142,6 +156,55 @@ int maxi(int a, int b) {
     return a > b ? a : b;
 }
 
+#ifdef _USE_ALPHA_BETA_PRUNE_
+/* the minimax algorithm: assuming player is on the minimizer side */
+int minimax(game_board g, int depth, bool ismax, int alpha, int beta) {
+    int r, c, best;
+    int score = evaluate(g);                /* evaluating the board */
+    if (score != SCORE_TIE) return score;   /* return score if a player won */
+    if (!has_move(g)) return SCORE_TIE;     /* no more move? it is a tie */
+
+    if (depth >= game_depth) return score;
+
+    progress_show();                        /* show progress bar */
+
+    states++;                               /* explored a search state */
+    if (ismax) {                            /* evaluating the maximizer player */
+        int best = MIN_VAL;                   /* for finding max */
+		for (r = 0; r < BOARD_SIZE; r++)    /* scan the game board */
+		for (c = 0; c < BOARD_SIZE; c++)
+            if (g[r][c] == CELL_E) {        /* found an empty cell */
+                g[r][c] = computer;         /* assuming computer move on that cell */
+                /* recursively explore down the state space */
+                score = minimax(g, depth+1, false, alpha, beta);
+                g[r][c] = CELL_E;           /* undo that move */
+                best = maxi(score, best);   /* obtain the maximum score */
+                
+                /* alpha-beta pruning */
+                alpha = maxi(alpha, best);
+                if (beta <= alpha) break;
+            }
+        return best;                        /* and return it */
+    }
+    else {                                  /* the minimizer's turn */
+        int best = MAX_VAL;                    /* for finding min */
+	    for (r = 0; r < BOARD_SIZE; r++)    /* scan the game board */
+	    for (c = 0; c < BOARD_SIZE; c++)
+            if (g[r][c] == CELL_E) {        /* found an empty cell */
+                g[r][c] = human;            /* assuming human move on that cell */
+                /* recursively explore down the state space */
+		        score = minimax(g, depth+1, true, alpha, beta);
+                g[r][c] = CELL_E;           /* undo that move */
+                best = mini(score, best);   /* obtain the minimum score */
+                
+                /* alpha-beta pruning */
+                beta = mini(beta, best);
+                if (beta <= alpha) break;
+            }
+        return best;                        /* also return it */
+    }
+}
+#else
 /* the minimax algorithm: assuming player is on the minimizer side */
 int minimax(game_board g, int depth, bool ismax) {
     int r, c, best;
@@ -181,6 +244,7 @@ int minimax(game_board g, int depth, bool ismax) {
         return best;                        /* also return it */
     }
 }
+#endif
 
 /* human make his move */
 bool human_move(game_board g, int c, int r) {
@@ -204,7 +268,11 @@ void computer_move(game_board g) {
         if (g[r][c] == CELL_E) {        /* found an empty cell */
             g[r][c] = computer;         /* assuming the move */
             /* search the search space */
+#ifdef _USE_ALPHA_BETA_PRUNE_
+            score = minimax(g, 0, false, MIN_VAL, MAX_VAL);
+#else
 	        score = minimax(g, 0, false);
+#endif
             g[r][c] = CELL_E;           /* and undo it */
             if (score > best) {         /* find the minimum score */             
                 best = score;           /* and save it */

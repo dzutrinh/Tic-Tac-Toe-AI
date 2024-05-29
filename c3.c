@@ -1,7 +1,7 @@
 /* -------------------------------------------------
  * C3.C: Tic-Tac-Toe MiniMax
  * -------------------------------------------------
- * V0.2
+ * V0.3
  * by Trinh D.D. Nguyen
  * MIT licensed
  * -------------------------------------------------
@@ -16,6 +16,8 @@
  * - Difficulty selection added
  * - Colorful interface is now supported
  * - Pacifier bar added
+ * - Alpha-Beta pruning added
+ * - Board size is now customizable.
 */
 #include "game.h"
 
