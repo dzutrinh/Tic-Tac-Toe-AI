@@ -33,8 +33,8 @@ void game_close(int result);
 void  game_logo() {
     clear();
     puts(logo);
-    printf( C_RESET"%42s"C_ERROR"%d"C_RESET"."C_ERROR"%d"C_RESET"\n", 
-            "V", GAME_VERSION & 0x00FF, (GAME_VERSION >> 8));
+    printf( "%32s"C_ERROR"%d"C_RESET"."C_ERROR"%d"C_RESET" ["C_MISC"%s"C_RESET"]\n",            
+            "V", GAME_VERSION & 0x00FF, (GAME_VERSION >> 8), GAME_ENGINE);
 }
 
 bool game_init() {

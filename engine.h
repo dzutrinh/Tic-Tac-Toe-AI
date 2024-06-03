@@ -10,8 +10,8 @@
 #include <stdio.h>
 #include "defs.h"
 
-#define MIN_VAL -1000
-#define MAX_VAL +1000
+#define MIN_INF -1000
+#define MAX_INF +1000
 
 /* =============== PROTOTYPES ==================== */
 
@@ -170,7 +170,7 @@ int minimax(game_board g, int depth, bool ismax, int alpha, int beta) {
 
     states++;                               /* explored a search state */
     if (ismax) {                            /* evaluating the maximizer player */
-        int best = MIN_VAL;                   /* for finding max */
+        int best = MIN_INF;                   /* for finding max */
 		for (r = 0; r < BOARD_SIZE; r++)    /* scan the game board */
 		for (c = 0; c < BOARD_SIZE; c++)
             if (g[r][c] == CELL_E) {        /* found an empty cell */
@@ -187,7 +187,7 @@ int minimax(game_board g, int depth, bool ismax, int alpha, int beta) {
         return best;                        /* and return it */
     }
     else {                                  /* the minimizer's turn */
-        int best = MAX_VAL;                    /* for finding min */
+        int best = MAX_INF;                    /* for finding min */
 	    for (r = 0; r < BOARD_SIZE; r++)    /* scan the game board */
 	    for (c = 0; c < BOARD_SIZE; c++)
             if (g[r][c] == CELL_E) {        /* found an empty cell */
@@ -269,7 +269,7 @@ void computer_move(game_board g) {
             g[r][c] = computer;         /* assuming the move */
             /* search the search space */
 #ifdef _USE_ALPHA_BETA_PRUNE_
-            score = minimax(g, 0, false, MIN_VAL, MAX_VAL);
+            score = minimax(g, 0, false, MIN_INF, MAX_INF);
 #else
 	        score = minimax(g, 0, false);
 #endif

@@ -10,14 +10,19 @@
 /* Alpha-Beta pruning strategy:
  * enable to compact the search space for faster runtime
  */
-#define _USE_ALPHA_BETA_PRUNE_
+//#define _USE_ALPHA_BETA_PRUNE_
 
-#define BOARD_SIZE      3                  /* board size, default at 3 */
+#define BOARD_SIZE      5                  /* board size, default at 3 */
 #define GAME_EASY       2
 #define GAME_MEDIUM     3
 #define GAME_HARD       5
 #define GAME_IMPOSSIBLE 6
 #define GAME_VERSION    0x0300             /* game version */
+#ifdef  _USE_ALPHA_BETA_PRUNE_
+    #define GAME_ENGINE     "ABPRUNE"
+#else
+    #define GAME_ENGINE     "MINIMAX"
+#endif
 
 #define CELL_X          ('X')              /* cross piece */
 #define CELL_O          ('O')              /* nought piece */
