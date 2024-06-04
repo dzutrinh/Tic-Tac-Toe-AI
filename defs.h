@@ -10,7 +10,7 @@
 /* Alpha-Beta pruning strategy:
  * enable to compact the search space for faster runtime
  */
-//#define _USE_ALPHA_BETA_PRUNE_
+#define _USE_ALPHA_BETA_PRUNE_
 
 #define BOARD_SIZE      5                  /* board size, default at 3 */
 #define GAME_EASY       2
