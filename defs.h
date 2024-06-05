@@ -12,7 +12,7 @@
  */
 #define _USE_ALPHA_BETA_PRUNE_
 
-#define BOARD_SIZE      5                  /* board size, default at 3 */
+#define BOARD_SIZE      3                  /* board size, default at 3 */
 #define GAME_EASY       2
 #define GAME_MEDIUM     3
 #define GAME_HARD       5
