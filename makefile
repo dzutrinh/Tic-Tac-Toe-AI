@@ -4,7 +4,7 @@ headers=defs.h engine.h game.h helper.h
 target=$(prg)
 cc=gcc
 cflags=--std=c99
-lflags=-o $(target)
+lflags=-o $(target) -g -s
 
 all: $(target)
 
