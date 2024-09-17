@@ -16,7 +16,7 @@ Updates:
 - MinGW64 (Windows)
 
 ## Notes
-- DOS support is now temporarily removed.
+- DOS support is now supported again.
 - Linux is not tested, I hope it would work :)
 - This is just a basic version of the game. Feels free to fork and modify anyway you need.
 
