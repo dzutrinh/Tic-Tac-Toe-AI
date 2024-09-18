@@ -49,12 +49,15 @@ void clear() {
 }
 
 void mssleep(long ms) {
+#ifndef __DJGPP__
 #ifndef _WIN32
 	struct timespec rem;
 	struct timespec req = { (int)(ms / 1000U), (ms % 1000U) * 1000000UL };
 	nanosleep(&req , &rem);
 #else
 	Sleep(ms);
+#endif
+
 #endif
 }
 
