@@ -68,17 +68,17 @@ void init_board(game_board g) {
 void show_board(game_board g, bool final) {
 
 #define HBAR    for (int c = 0; c < BOARD_SIZE; c++) \
-                    printf(C_DARK"+-----");          \
-                printf("+\n");
+                    printf(C_DARK"+-----"C_RESET);          \
+                printf(C_RESET"+\n");
 
     HBAR;
     for (int r = 0; r < BOARD_SIZE; r++) {
         for (int c = 0; c < BOARD_SIZE; c++) {
             if (is_occupied(g, c, r)) {
                 if (g[r][c] == CELL_X)
-                    printf(C_DARK"| "C_X"%2c  ", g[r][c]);
+                    printf(C_DARK"| "C_X"%2c  "C_DARK, g[r][c]);
                 else
-                    printf(C_DARK"| "C_O"%2c  ", g[r][c]);
+                    printf(C_DARK"| "C_O"%2c  "C_DARK, g[r][c]);
             }
             else {
                 if (!final)

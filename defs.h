@@ -48,21 +48,21 @@
 	#define C_HARD          "\x1b[38;5;202m"
 	#define C_IMPOSSIBLE    "\x1b[38;5;9m"
 #else
-	#define C_X             ""
-	#define C_O		""
-	#define C_EMPTY 	""
-	#define C_RESET 	""
-	#define C_BRIGHT	""
-	#define C_NORMAL	""
-	#define C_DARK		""
-	#define C_ERROR 	""
-	#define C_WARNING	""
-	#define C_THINKING	""
-	#define C_MISC		""
-	#define C_EASY		""
-	#define C_MEDIUM	""
-	#define C_HARD          ""
-	#define C_IMPOSSIBLE	""
+	#define C_X             "\x1b[1;34m"
+	#define C_O		"\x1b[1;35m"
+	#define C_EMPTY 	"\x1b[0;32m"
+	#define C_RESET 	"\x1b[0;37m"
+	#define C_BRIGHT	"\x1b[1;37m"
+	#define C_NORMAL	"\x1b[0;37m"
+	#define C_DARK		"\x1b[0;37m"
+	#define C_ERROR 	"\x1b[1;31m"
+	#define C_WARNING	"\x1b[0;33m"
+	#define C_THINKING	"\x1b[1;33m"
+	#define C_MISC		"\x1b[0;31m"
+	#define C_EASY		"\x1b[1;32m"
+	#define C_MEDIUM	"\x1b[1;33m"
+	#define C_HARD          "\x1b[1;31m"
+	#define C_IMPOSSIBLE	"\x1b[0;31m"
 #endif
 
 typedef enum {false, true} bool;    /* simulation of boolean type */ 
@@ -88,10 +88,10 @@ char * logo =
     "\x1b[38;5;19m  |_| |_\\__|    \x1b[38;5;90m|_|\\__,_\\__|    \x1b[38;5;94m|_|\\___/\\___|"C_RESET;
 #else
 char * logo = 
-    " _____ _       _____           _____        \n"
-    "|_   _(_)__ __|_   _|_ _ __ __|_   _|__  ___ \n"
-    "  | | | / _|___|| |/ _` / _|___|| |/ _ \\/ -_)\n"
-    "  |_| |_\\__|    |_|\\__,_\\__|    |_|\\___/\\___|";
+    "\x1b[1;37m _____ _       _____           _____        \n"
+    "\x1b[0;37m|_   _(_)__ __|_   _|_ _ __ __|_   _|__  ___ \n"
+    "\x1b[1;36m  | | | / _|___|\x1b[1;35m| |/ _` / _|___|\x1b[1;33m| |/ _ \\/ -_)\n"
+    "\x1b[0;34m  |_| |_\\__|   \x1b[0;35m |_|\\__,_\\__| \x1b[0;33m   |_|\\___/\\___|\x1b[0;37m";
 #endif
 
 #endif
