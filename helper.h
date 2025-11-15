@@ -2,7 +2,7 @@
  * HELPERS.H: Tic-Tac-Toe AI helpers
  * ----------
  * Coded by Trinh D.D. Nguyen
- * Last updates: May, 2024
+ * Last updates: Nov, 2025
  */
 #ifndef _TICTACTOE_MINIMAX_HELPERS_H_
 #define _TICTACTOE_MINIMAX_HELPERS_H_

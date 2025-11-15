@@ -2,7 +2,7 @@
  * DEFS.H: Tic-Tac-Toe AI global definitions 
  * -------
  * Coded by Trinh D.D. Nguyen
- * Last updates: May, 2024
+ * Last updates: Nov, 2025
  */
 #ifndef _TICTACTOE_MINIMAX_DEFS_H_
 #define _TICTACTOE_MINIMAX_DEFS_H_
@@ -17,7 +17,7 @@
 #define GAME_MEDIUM     3
 #define GAME_HARD       5
 #define GAME_IMPOSSIBLE 6
-#define GAME_VERSION    0x0300             /* game version */
+#define GAME_VERSION    0x0400             /* game version */
 #ifdef  _USE_ALPHA_BETA_PRUNE_
     #define GAME_ENGINE     "ABPRUNE"
 #else
@@ -49,18 +49,18 @@
 	#define C_IMPOSSIBLE    "\x1b[38;5;9m"
 #else
 	#define C_X             "\x1b[1;34m"
-	#define C_O		"\x1b[1;35m"
-	#define C_EMPTY 	"\x1b[0;32m"
-	#define C_RESET 	"\x1b[0;37m"
-	#define C_BRIGHT	"\x1b[1;37m"
-	#define C_NORMAL	"\x1b[0;37m"
-	#define C_DARK		"\x1b[0;37m"
-	#define C_ERROR 	"\x1b[1;31m"
-	#define C_WARNING	"\x1b[0;33m"
-	#define C_THINKING	"\x1b[1;33m"
-	#define C_MISC		"\x1b[0;31m"
-	#define C_EASY		"\x1b[1;32m"
-	#define C_MEDIUM	"\x1b[1;33m"
+	#define C_O		        "\x1b[1;35m"
+	#define C_EMPTY 	    "\x1b[0;32m"
+	#define C_RESET 	    "\x1b[0;37m"
+	#define C_BRIGHT	    "\x1b[1;37m"
+	#define C_NORMAL    	"\x1b[0;37m"
+	#define C_DARK		    "\x1b[0;37m"
+	#define C_ERROR 	    "\x1b[1;31m"
+	#define C_WARNING	    "\x1b[0;33m"
+	#define C_THINKING	    "\x1b[1;33m"
+	#define C_MISC		    "\x1b[0;31m"
+	#define C_EASY		    "\x1b[1;32m"
+	#define C_MEDIUM	    "\x1b[1;33m"
 	#define C_HARD          "\x1b[1;31m"
 	#define C_IMPOSSIBLE	"\x1b[0;31m"
 #endif
@@ -73,12 +73,22 @@ typedef struct mv {                 /* store the best move found */
 
 typedef char game_board[BOARD_SIZE][BOARD_SIZE];
 
+/* Transposition table for memoization */
+#define TRANS_TABLE_SIZE 19683  /* 3^9 for 3x3 board */
+typedef struct {
+    unsigned int hash;
+    int score;
+    char depth;
+} trans_entry;
+
 char human = CELL_O;                /* human player symbol */
 char computer = CELL_X;             /* computer symbol */
 char current;                       /* current turn */
 int game_depth = GAME_MEDIUM;       /* AI level */
 game_board board;                   /* empty game board */
 int states = 0;                     /* searched state counter */
+int move_count = 0;                 /* number of moves made */
+trans_entry trans_table[TRANS_TABLE_SIZE];  /* transposition table */
 
 #ifndef __DJGPP__
 char * logo = 
