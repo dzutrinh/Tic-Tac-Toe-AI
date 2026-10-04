@@ -33,7 +33,7 @@
 #define GAME_QUIT       (2)                /* game abandoned by the player */
 
 #ifndef __DJGPP__
-	#define C_X             "\x1b[38;5;20m"
+	#define C_X             "\x1b[38;5;39m"
 	#define C_O             "\x1b[38;5;207m"
 	#define C_EMPTY         "\x1b[38;5;34m"
 	#define C_RESET         "\x1b[0m"
