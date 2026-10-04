@@ -16,10 +16,10 @@ Updates:
 ## Tested
 - Clang (macOS Tahoe)
 - MinGW64 (Windows)
+- GCC (Linux)
 
 ## Notes
 - DOS support is now supported again.
-- Linux is not tested, I hope it would work :)
 - This is just a basic version of the game. Feels free to fork and modify anyway you need.
 - Tests are included in the `test` folder. To build the tests, type `make test`.
 

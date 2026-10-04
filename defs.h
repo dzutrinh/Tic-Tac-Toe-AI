@@ -30,6 +30,7 @@
 #define SCORE_X         (+1)               /* evaluation score for X */
 #define SCORE_O         (-1)               /* evaluation score for O */
 #define SCORE_TIE       (0)                /* no winner found, tie */
+#define GAME_QUIT       (2)                /* game abandoned by the player */
 
 #ifndef __DJGPP__
 	#define C_X             "\x1b[38;5;20m"
@@ -75,10 +76,14 @@ typedef char game_board[BOARD_SIZE][BOARD_SIZE];
 
 /* Transposition table for memoization */
 #define TRANS_TABLE_SIZE 19683  /* 3^9 for 3x3 board */
+#define TT_EXACT        0       /* stored score is the exact minimax value */
+#define TT_LOWER        1       /* search failed high: value >= score */
+#define TT_UPPER        2       /* search failed low:  value <= score */
 typedef struct {
     unsigned int hash;
     int score;
     char depth;
+    char flag;                  /* TT_EXACT, TT_LOWER or TT_UPPER */
 } trans_entry;
 
 char human = CELL_O;                /* human player symbol */

@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 #include "../defs.h"
 #include "../helper.h"
 #include "../engine.h"
@@ -270,6 +271,121 @@ void test_easy_mode() {
     }
 }
 
+void test_has_move_without_counter() {
+    TEST("Full Board Detection (move counter not updated)");
+    if (BOARD_SIZE != 3) {
+        printf("  (Skipped - only for 3x3 board)\n");
+        return;
+    }
+    
+    game_board test_board;
+    init_board(test_board);             /* resets move_count to 0 */
+    const char * cells = "XOXXOOOXO";
+    for (int i = 0; i < 9; i++)
+        test_board[i / 3][i % 3] = cells[i];
+    
+    ASSERT(!has_move(test_board), "Full board has no moves even if move_count is 0");
+}
+
+void test_computer_move_full_board() {
+    TEST("Computer Move on Full Board");
+    if (BOARD_SIZE != 3) {
+        printf("  (Skipped - only for 3x3 board)\n");
+        return;
+    }
+    
+    game_board test_board, before;
+    const char * cells = "XOXXOOOXO";
+    int levels[] = { GAME_EASY, GAME_HARD };
+    
+    for (int l = 0; l < 2; l++) {
+        init_board(test_board);
+        for (int i = 0; i < 9; i++)
+            test_board[i / 3][i % 3] = cells[i];
+        move_count = 9;
+        memcpy(before, test_board, sizeof(game_board));
+        game_depth = levels[l];
+        
+        computer_move(test_board);      /* must not write outside the board */
+        
+        ASSERT(memcmp(before, test_board, sizeof(game_board)) == 0,
+               l == 0 ? "Easy mode leaves a full board untouched"
+                      : "Minimax leaves a full board untouched");
+    }
+}
+
+void test_move_ordering() {
+    TEST("Move Ordering");
+    game_board test_board;
+    init_board(test_board);             /* builds the move ordering table */
+    
+    int seen[BOARD_SIZE * BOARD_SIZE] = {0}, ok = 1;
+    for (int i = 0; i < BOARD_SIZE * BOARD_SIZE; i++) {
+        int pos = move_priority[i];
+        if (pos < 0 || pos >= BOARD_SIZE * BOARD_SIZE || seen[pos]++) ok = 0;
+    }
+    ASSERT(ok, "Every cell appears exactly once in the move ordering");
+    
+    if (BOARD_SIZE == 3) {
+        int expected[9] = {4, 0, 2, 6, 8, 1, 3, 5, 7};
+        ASSERT(memcmp(move_priority, expected, sizeof(expected)) == 0,
+               "3x3 ordering is center, corners, then edges");
+    }
+}
+
+/* plays every possible sequence of human moves against the AI; returns the
+   number of games the AI lost */
+static int play_all_games(game_board g, int * games) {
+    int lost = 0;
+    for (int pos = 0; pos < BOARD_SIZE * BOARD_SIZE; pos++) {
+        int r = pos / BOARD_SIZE, c = pos % BOARD_SIZE;
+        if (g[r][c] != CELL_E) continue;
+        
+        game_board b;
+        memcpy(b, g, sizeof(game_board));
+        b[r][c] = human;
+        if (evaluate(b) == SCORE_O) { (*games)++; lost++; continue; }
+        if (!has_move(b))           { (*games)++; continue; }
+        
+        computer_move(b);
+        if (evaluate(b) != SCORE_TIE || !has_move(b)) { (*games)++; continue; }
+        
+        lost += play_all_games(b, games);
+    }
+    return lost;
+}
+
+void test_ai_never_loses() {
+    TEST("AI Never Loses (every possible game)");
+    if (BOARD_SIZE != 3) {
+        printf("  (Skipped - only for 3x3 board)\n");
+        return;
+    }
+    
+    int levels[] = { GAME_MEDIUM, GAME_HARD, GAME_IMPOSSIBLE };
+    const char * names[] = { "Medium", "Hard", "Impossible" };
+    int saved_update = progress_update;
+    
+    human = CELL_O;
+    computer = CELL_X;
+    progress_update = 1 << 30;          /* keep the pacifier quiet and fast */
+    
+    for (int l = 0; l < 3; l++) {
+        game_board test_board;
+        int games = 0, lost;
+        char msg[96];
+        
+        game_depth = levels[l];
+        init_board(test_board);
+        lost = play_all_games(test_board, &games);
+        
+        sprintf(msg, "%s AI loses none of %d games", names[l], games);
+        ASSERT(lost == 0, msg);
+    }
+    
+    progress_update = saved_update;
+}
+
 int main() {
     printf("===========================================\n");
     printf("  Tic-Tac-Toe AI Engine Validation Tests\n");
@@ -288,6 +404,10 @@ int main() {
     test_ai_blocking();
     test_ai_winning();
     test_easy_mode();
+    test_has_move_without_counter();
+    test_computer_move_full_board();
+    test_move_ordering();
+    test_ai_never_loses();
     
     printf("\n===========================================\n");
     printf("  Test Results:\n");

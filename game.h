@@ -7,6 +7,10 @@
 #ifndef _TICTACTOE_MINIMAX_GAME_H_
 #define _TICTACTOE_MINIMAX_GAME_H_
 
+#if !defined(_WIN32) && !defined(__DJGPP__) && !defined(_POSIX_C_SOURCE)
+    #define _POSIX_C_SOURCE 200809L    /* nanosleep() under --std=c99 */
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -31,6 +35,13 @@ bool game_ask_continue();
 	static 	DWORD mode = 0;						
 	static	HANDLE hConsole = NULL;
 #endif
+
+/* restore the console to the state it had before the game started */
+void game_restore_console() {
+#ifdef _WIN32
+    if (hConsole) SetConsoleMode(hConsole, mode);
+#endif
+}
 
 void  game_logo() {
     clear();
@@ -68,6 +79,10 @@ bool game_init() {
                 "Your choice: ");
         
         if (scanf(" %c", &choice) != 1) {
+            if (feof(stdin)) {              /* no more input: leave */
+                game_restore_console();
+                return false;
+            }
             printf(C_ERROR"Invalid input! Please try again.\n"C_RESET);
             mssleep(1000);
             /* clear bad input */
@@ -101,6 +116,7 @@ bool game_init() {
             valid = 1;
             break;
         case 'Q': 
+            game_restore_console();
             return false;
         default:
             printf(C_ERROR"Invalid choice! Please select E, M, H, I, or Q.\n"C_RESET);
@@ -115,7 +131,7 @@ bool game_init() {
 int game_play() {
     bool quit = false;                  /* quit flag */
     bool valid;
-    int input, c, r, eval, range;
+    int input, c, r, eval = SCORE_TIE, range;
     int scan_result, ch;
     
     current = human;                    /* human moves first */
@@ -135,6 +151,12 @@ int game_play() {
                     printf(C_BRIGHT"Your move "C_DARK"["C_WARNING"%d"C_DARK"-"C_WARNING"%d"C_DARK"] ("C_ERROR"-1"C_BRIGHT" = "C_WARNING"quit"C_DARK"): ", 0, range);
                     
                     scan_result = scanf("%d", &input);
+                    
+                    /* no more input: abandon the game */
+                    if (scan_result == EOF) {
+                        input = -1;
+                        break;
+                    }
                     
                     /* handle invalid input (non-numeric) */
                     if (scan_result != 1) {
@@ -158,6 +180,7 @@ int game_play() {
                 
                 if (input == -1) {
                     quit = true;
+                    eval = GAME_QUIT;
                     break;
                 }
                 
@@ -177,12 +200,16 @@ int game_play() {
         else quit = true;               /* no more cell to play */
 
         if (!quit) {                    /* if human placed a move */
-            computer_move(board);       /* now to the computer's turn */
+            eval = evaluate(board);     /* did the human just win? */
+            if (eval != SCORE_TIE || !has_move(board))
+                quit = true;            /* human won, or the board is full */
+        }
+
+        if (!quit) {                    /* now to the computer's turn */
+            computer_move(board);
             eval = evaluate(board);     /* evaluate the board */
-            switch (eval) {
-            case SCORE_X: quit = true; break;
-            case SCORE_O: quit = true; break;
-            }
+            if (eval != SCORE_TIE || !has_move(board))
+                quit = true;            /* computer won, or the board is full */
         }
     } while(!quit);
     return eval;
@@ -195,6 +222,7 @@ void game_close(int result) {
     case SCORE_X: printf(C_X"X"C_WARNING" WINS!"C_RESET"\n"); break;
     case SCORE_O: printf(C_O"O"C_WARNING" WINS!"C_RESET"\n"); break;
     case SCORE_TIE: printf(C_WARNING"GAME TIES!"C_RESET"\n"); break;
+    case GAME_QUIT: printf(C_WARNING"GAME ABANDONED."C_RESET"\n"); break;
     }
 }
 
@@ -207,6 +235,7 @@ bool game_ask_continue() {
     
     if (scanf(" %c", &choice) != 1) {
         while ((c = getchar()) != '\n' && c != EOF);
+        game_restore_console();
         return false;
     }
     
@@ -217,10 +246,7 @@ bool game_ask_continue() {
     
     if (choice == 'N') {
         puts(C_THINKING"Thanks for playing"C_RESET"!");
-        
-#ifdef _WIN32
-        SetConsoleMode(hConsole, mode);     /* restore previous CMD mode */
-#endif
+        game_restore_console();
         return false;
     }
     

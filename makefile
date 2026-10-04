@@ -9,7 +9,7 @@ test_dir=test
 test_target=$(test_dir)/tst_eng
 test_helper_target=$(test_dir)/tst_hlp
 cc=gcc
-cflags=--std=c99
+cflags=--std=c99 -D_POSIX_C_SOURCE=200809L
 lflags=-o $(target) -s
 
 all: $(target)
