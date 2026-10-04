@@ -56,7 +56,7 @@ void mssleep(long ms) {
 		nanosleep(&req , &rem);
 	#else
 		clock_t start = clock();
-		while (clock() < start + ms/1000) ;
+		while (clock() < start + (clock_t)(ms * CLOCKS_PER_SEC / 1000)) ;
 	#endif
 #else
 	Sleep(ms);
