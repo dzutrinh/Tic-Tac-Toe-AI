@@ -30,7 +30,7 @@ Tests are included in the `test` folder. To build and run them, type `make test`
 - `tst_hlp`: screen and progress bar helpers.
 
 ## Tested
-- Clang (macOS Tahoe)
+- Clang 21 (macOS Golden Gate)
 - MinGW64 (Windows)
 - GCC (Linux)
 
